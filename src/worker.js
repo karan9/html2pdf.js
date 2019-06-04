@@ -218,12 +218,17 @@ Worker.prototype.toPdf = function toPdf() {
       var imgData = pageCanvas.toDataURL('image/' + opt.image.type, opt.image.quality);
 
       // check if margin is excluded
-      const marginLeftRight = opt.excludeMargins.left.indexOf(page) === -1 ? opt.margin[1] : 0;
-      const marginTopBottom = opt.excludeMargins.top.indexOf(page) === -1 ? opt.margin[0] : 0;
+      // const marginLeftRight = opt.excludeMargins.left.indexOf(page) === -1 ? opt.margin[1] : 0;
+      // const marginTopBottom = opt.excludeMargins.top.indexOf(page) === -1 ? opt.margin[0] : 0;
 
       /* Add CSS Image */
-      this.prop.pdf.addImage(imgData, opt.image.type, marginLeftRight, marginTopBottom,
-        this.prop.pageSize.inner.width, pageHeight);
+      if (page === 0) {
+        this.prop.pdf.addImage(imgData, opt.image.type, opt.margin[1], 0,
+          this.prop.pageSize.inner.width, pageHeight);
+      } else {
+        this.prop.pdf.addImage(imgData, opt.image.type, opt.margin[1], opt.margin[0],
+          this.prop.pageSize.inner.width, pageHeight);
+      }
     }
   });
 };
