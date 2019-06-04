@@ -1,6 +1,6 @@
 /**
  * html2pdf.js v0.9.1
- * Copyright (c) 2018 Erik Koopmans
+ * Copyright (c) 2019 Erik Koopmans
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -8604,6 +8604,12 @@ Worker.template = {
   opt: {
     filename: 'file.pdf',
     margin: [0, 0, 0, 0],
+    excludeMargins: {
+      top: [],
+      bottom: [],
+      left: [],
+      right: []
+    },
     image: { type: 'jpeg', quality: 0.95 },
     enableLinks: true,
     html2canvas: {},
@@ -8776,7 +8782,13 @@ Worker.prototype.toPdf = function toPdf() {
       // Add the page to the PDF.
       if (page) this.prop.pdf.addPage();
       var imgData = pageCanvas.toDataURL('image/' + opt.image.type, opt.image.quality);
-      this.prop.pdf.addImage(imgData, opt.image.type, opt.margin[1], opt.margin[0], this.prop.pageSize.inner.width, pageHeight);
+
+      // check if margin is excluded
+      var marginLeftRight = opt.excludeMargins.left.indexOf(page) === -1 ? opt.margin[1] : 0;
+      var marginTopBottom = opt.excludeMargins.top.indexOf(page) === -1 ? opt.margin[0] : 0;
+
+      /* Add CSS Image */
+      this.prop.pdf.addImage(imgData, opt.image.type, marginLeftRight, marginTopBottom, this.prop.pageSize.inner.width, pageHeight);
     }
   });
 };
